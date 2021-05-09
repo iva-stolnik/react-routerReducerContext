@@ -1,23 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
+import ReducerPametni from "./components/ReducerPametni";
+import ReducerGlupi from "./components/ReducerGlupi";
+import KontekstGlupi from "./components/KontekstGlupi";
+import VjezbaSwitch from "./components/VjezbaSwitch";
+import "./App.css";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <KontekstGlupi />
+      <hr />
+      <ReducerPametni />
+      <hr />
+      <ReducerGlupi />
+      <hr />
+      <VjezbaSwitch />
     </div>
   );
 }
