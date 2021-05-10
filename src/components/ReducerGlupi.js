@@ -5,7 +5,8 @@ const reducer = (state, akcija) => {
   switch (akcija.type) {
     case "promjena_inputa":
       return { ...state, ime: akcija.payload };
-    case "unesi": {
+
+    case "unesi":
       if (akcija.payload === undefined) {
         return { ...state, showModal: false };
       } else if (akcija.payload === "") {
@@ -15,7 +16,6 @@ const reducer = (state, akcija) => {
           id: new Date().getTime().toString(),
           ime: akcija.payload,
         };
-
         return {
           ...state,
           ime: "",
@@ -24,12 +24,12 @@ const reducer = (state, akcija) => {
           textModal: (
             <h4>
               Dodali ste osobu:
-              <em className="text-capitalize"> {akcija.payload}</em>
+              <b className="text-capitalize"> {akcija.payload}</b>
             </h4>
           ),
         };
       }
-    }
+
     case "obrisi":
       const noveOsobe = state.osobe.filter(
         (osoba) => osoba.id !== akcija.payload.id
@@ -41,10 +41,11 @@ const reducer = (state, akcija) => {
         textModal: (
           <h4>
             Obrisali ste osobu:
-            <em className="text-capitalize"> {akcija.payload.ime}</em>
+            <b className="text-capitalize"> {akcija.payload.ime}</b>
           </h4>
         ),
       };
+
     case "reset":
       return {
         ...state,
@@ -52,6 +53,7 @@ const reducer = (state, akcija) => {
         showModal: false,
         textModal: "",
       };
+
     default:
       throw new Error("Nema takve radnje!");
   }
@@ -69,18 +71,21 @@ const ReducerGlupi = () => {
   // eslint-disable-next-line
   const [ime, setIme] = useState("");
   const [state, dispatch] = useReducer(reducer, initialState);
-  var countdown = () => {
+  const [counter, setCounter] = useState("");
+
+  React.useEffect(() => {
+    counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
+  }, [counter]);
+
+  const timer = () => {
+    setCounter(3);
     setTimeout(() => {
       dispatch({ type: "reset" });
     }, 3000);
   };
 
-  function timer() {
-    countdown();
-  }
-
   return (
-    <div className="container">
+    <div className="container position-relative">
       <div className="col-md-6" style={{ margin: "auto" }}>
         <div
           name="modal"
@@ -92,7 +97,9 @@ const ReducerGlupi = () => {
               {state.textModal}
             </Modal.Body>
             <Modal.Footer>
-              <p className="text-danger">Modal će se zatvoriti za 3 sekunde!</p>
+              <p className="text-danger">
+                Modal će se zatvoriti za <b>{counter}s</b>!
+              </p>
             </Modal.Footer>
           </Modal.Dialog>
         </div>
@@ -113,7 +120,7 @@ const ReducerGlupi = () => {
             className="btn btn-dark "
             onClick={() => {
               dispatch({ type: "unesi", payload: state.ime });
-              timer();
+              (state.ime || ime !== "") && timer();
             }}
           >
             Unesi
