@@ -7,28 +7,25 @@ const reducer = (state, akcija) => {
       return { ...state, ime: akcija.payload };
 
     case "unesi":
-      if (akcija.payload === undefined) {
+      if (akcija.payload === "") {
         return { ...state, showModal: false };
-      } else if (akcija.payload === "") {
-        return { ...state, showModal: false };
-      } else {
-        const novaOsoba = {
-          id: new Date().getTime().toString(),
-          ime: akcija.payload,
-        };
-        return {
-          ...state,
-          ime: "",
-          osobe: [...state.osobe, novaOsoba],
-          showModal: true,
-          textModal: (
-            <h4>
-              Dodali ste osobu:
-              <b className="text-capitalize"> {akcija.payload}</b>
-            </h4>
-          ),
-        };
       }
+      const novaOsoba = {
+        id: new Date().getTime().toString(),
+        ime: akcija.payload,
+      };
+      return {
+        ...state,
+        ime: "",
+        osobe: [...state.osobe, novaOsoba],
+        showModal: true,
+        textModal: (
+          <h4>
+            Dodali ste osobu:
+            <b className="text-capitalize text-break"> {akcija.payload}</b>
+          </h4>
+        ),
+      };
 
     case "obrisi":
       const noveOsobe = state.osobe.filter(
@@ -41,7 +38,7 @@ const reducer = (state, akcija) => {
         textModal: (
           <h4>
             Obrisali ste osobu:
-            <b className="text-capitalize"> {akcija.payload.ime}</b>
+            <b className="text-capitalize text-break"> {akcija.payload.ime}</b>
           </h4>
         ),
       };
@@ -59,6 +56,7 @@ const reducer = (state, akcija) => {
   }
 };
 const initialState = {
+  ime: "",
   osobe: [
     { id: "1", ime: "Šime" },
     { id: "2", ime: "Frane" },
@@ -68,8 +66,6 @@ const initialState = {
 };
 
 const ReducerGlupi = () => {
-  // eslint-disable-next-line
-  const [ime, setIme] = useState("");
   const [state, dispatch] = useReducer(reducer, initialState);
   const [counter, setCounter] = useState("");
 
@@ -78,6 +74,7 @@ const ReducerGlupi = () => {
   }, [counter]);
 
   const timer = () => {
+    console.log("odbrojavam 3s");
     setCounter(3);
     setTimeout(() => {
       dispatch({ type: "reset" });
@@ -117,10 +114,11 @@ const ReducerGlupi = () => {
           <button
             type="button"
             name="posalji"
+            data-dismiss="alert"
             className="btn btn-dark "
             onClick={() => {
               dispatch({ type: "unesi", payload: state.ime });
-              (state.ime || ime !== "") && timer();
+              state.ime !== "" && timer();
             }}
           >
             Unesi
@@ -131,7 +129,10 @@ const ReducerGlupi = () => {
           {state.osobe.map((osoba, index) => {
             return (
               <div key={index} className="row m-1 p-1 text-danger">
-                <h6 className="text-capitalize" style={{ width: "70%" }}>
+                <h6
+                  className="text-capitalize text-break"
+                  style={{ width: "70%" }}
+                >
                   {osoba.ime}
                 </h6>
                 <i
